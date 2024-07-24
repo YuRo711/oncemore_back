@@ -47,3 +47,17 @@ module.exports.getCurrentUser = (req, res, next) => {
       }
     });
 }
+
+module.exports.getUsers = (req, res, next) => {
+  User.find()
+    .then(user => res.status(OK_CODE).send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(BadRequestError(ID_CAST_MESSAGE))
+      } else {
+          next(err);
+      }
+    });
+}
