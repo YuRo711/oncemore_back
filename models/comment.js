@@ -3,7 +3,7 @@ const validator = require('validator');
 
 const { Schema } = mongoose;
 
-const reviewSchema = new Schema({
+const commentSchema = new Schema({
   author: {
     type: ObjectId,
     required: true,
@@ -20,4 +20,4 @@ const reviewSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('review', reviewSchema);
+module.exports = mongoose.model('comment', commentSchema);
