@@ -48,8 +48,15 @@ module.exports.getCurrentUser = (req, res, next) => {
     });
 }
 
-module.exports.getUsers = (req, res, next) => {
-  User.find()
+module.exports.getUser = (req, res, next) => {
+  const { id } = req.params;
+
+  User.findById(id)
+    .orFail(() => {
+      const error = new Error();
+      error.name = "NotFound";
+      return Promise.reject(error);
+    })
     .then(user => res.status(OK_CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFound') {
