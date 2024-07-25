@@ -8,7 +8,7 @@ const userSchema = new Schema({
       type: String,
       required: true,
       minlength: 2,
-      maxlength: 30,
+      maxlength: 32,
     },
     email: {
       type: String,
@@ -18,12 +18,18 @@ const userSchema = new Schema({
           return validator.isEmail(value);
         }
       },
-        unique: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
-        select: false,
+      type: String,
+      required: true,
+      select: false,
+    },
+    handle: {
+      type: String,
+      minlength: 2,
+      maxlength: 32,
+      unique: true,
     },
     avatar: {
       type: String,
