@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bitrix24-promise": "github:volga-volga/bitrix24-promise",
     "body-parser": "^1.20.2",
     "celebrate": "^15.0.3",
     "cors": "^2.8.5",

@@ -57,3 +57,12 @@ module.exports.validateUserLogin = celebrate({
     }),
   }),
 });
+
+module.exports.validateReview = celebrate({
+  body: Joi.object().keys({
+    video: Joi.string().custom(validateURL).messages({
+      "string.uri": 'the "video" field must be a valid url',
+      "string.empty": 'The "video" field must be filled in',
+    }),
+  }),
+});

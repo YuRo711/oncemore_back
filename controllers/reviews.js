@@ -45,3 +45,20 @@ module.exports.getReview = (req, res, next) => {
       }
     });
 }
+
+
+module.exports.createReview = (req, res, next) => {
+  const { author, product, video, text } = req.body;
+
+  Review.create({ author, product, video, text })
+    .then(() => res.status(OK_CODE)
+      .send({ data: { author, product, video, text } })
+    )
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+          next(new BadRequestError(err.message));
+      } else {
+          next(err);
+      }
+    });
+}
