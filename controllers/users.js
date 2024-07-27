@@ -68,3 +68,26 @@ module.exports.getUser = (req, res, next) => {
       }
     });
 }
+
+module.exports.editCurrentUser = (req, res, next) => {
+  const { _id } = req.user;
+  changes.name ??= req.body.name;
+  changes.avatar ??= req.body.avatar;
+  
+  User.findByIdAndUpdate(_id, changes, { new: true, runValidators: true })
+      .then((user) => {
+          const { name, avatar, email } = user;
+          res.status(OK_CODE).send({ data: { name, avatar, email} });
+      })
+      .catch((err) => {
+          if (err.name === 'NotFound') {
+              next(NotFoundError(NOT_FOUND_MESSAGE));
+          } else if (err.name === 'CastError') {
+              next(BadRequestError(ID_CAST_MESSAGE))
+          } else if (err.name === 'ValidationError') {
+              next(new BadRequestError(err.message));
+          } else {
+              next(err);
+          }
+  });
+}
