@@ -12,6 +12,7 @@
   "author": "YuRo711",
   "license": "ISC",
   "dependencies": {
+    "@2bad/bitrix": "^2.5.1",
     "bcrypt": "^5.1.1",
     "bitrix24-promise": "github:volga-volga/bitrix24-promise",
     "body-parser": "^1.20.2",

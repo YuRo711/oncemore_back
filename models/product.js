@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const { Schema } = mongoose;
+const { ObjectId } = Schema;
 
 const productSchema = new Schema({
   bitrixUrl: {
