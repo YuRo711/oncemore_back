@@ -2,6 +2,7 @@ const router = require('express').Router();
 const userRouter = require('./users');
 const reviewRouter = require('./reviews');
 const commentRouter = require('./comments');
+const productRouter = require('./products');
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const NotFoundError = require('../utils/errors/not-found-err');
@@ -13,6 +14,7 @@ router.post('/signup', validateUserData, createUser);
 router.use('/users/', userRouter);
 router.use('/reviews/', reviewRouter);
 router.use('/comments/', commentRouter);
+router.use('/products/', productRouter);
 
 router.use('*', (req, res, next) => {
     next(new NotFoundError("Requested resource not found"));

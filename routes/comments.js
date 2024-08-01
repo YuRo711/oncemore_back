@@ -4,6 +4,7 @@ const {
   createComment, 
   deleteComment 
 } = require('../controllers/comments');
+const adminPrivilege = require('../middlewares/adminPrivilege');
 
 router.post('/', auth, createComment);
 router.delete('/:id', auth, adminPrivilege, deleteComment);
