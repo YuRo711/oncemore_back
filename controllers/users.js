@@ -95,7 +95,7 @@ module.exports.editCurrentUser = (req, res, next) => {
 module.exports.blockUser = (req, res, next) => {
   const { id } = req.params;
 
-  User.findByIdAndUpdate(_id, { blocked: true, })
+  User.findByIdAndUpdate(_id, { privilege: -1, })
       .then((user) => {
           const { name, email } = user;
           res.status(OK_CODE).send({ data: { name, email} });
