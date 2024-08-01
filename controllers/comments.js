@@ -16,3 +16,23 @@ module.exports.createComment = (req, res, next) => {
       }
     });
 }
+
+module.exports.deleteComment = (req, res, next) => {
+  const { id } = req.params;
+  
+  Comment.findByIdAndDelete(id)
+    .then((comment) => {
+      res.status(OK_CODE).send({ data: comment });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(BadRequestError(ID_CAST_MESSAGE))
+      } else if (err.name === 'ValidationError') {
+          next(new BadRequestError(err.message));
+      } else {
+          next(err);
+      }
+  });
+}

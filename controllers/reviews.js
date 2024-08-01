@@ -62,3 +62,23 @@ module.exports.createReview = (req, res, next) => {
       }
     });
 }
+
+module.exports.deleteReview = (req, res, next) => {
+  const { id } = req.params;
+  
+  Review.findByIdAndDelete(id)
+    .then((review) => {
+      res.status(OK_CODE).send({ data: review });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(BadRequestError(ID_CAST_MESSAGE))
+      } else if (err.name === 'ValidationError') {
+          next(new BadRequestError(err.message));
+      } else {
+          next(err);
+      }
+  });
+}
