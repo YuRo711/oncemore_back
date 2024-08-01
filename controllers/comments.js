@@ -36,3 +36,17 @@ module.exports.deleteComment = (req, res, next) => {
       }
   });
 }
+
+module.exports.getComments = (req, res, next) => {
+  const { reviewId } = req.params;
+
+  Comment.find({ review: reviewId })
+    .then(comments => res.status(OK_CODE).send({ data: comments }))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+          next(BadRequestError(ID_CAST_MESSAGE))
+      } else {
+          next(err);
+      }
+    });
+}
