@@ -15,6 +15,11 @@ module.exports.login = (req, res, next) => {
                 error.name = 'LoginError';
                 return Promise.reject(error);
             }
+            if (user.privilege < 0) {
+                const error = new Error();
+                error.name = 'PrivilegeError';
+                return Promise.reject(error);
+            }
 
             return bcrypt.compare(password, user.password)
                 .then((matched) => {
@@ -33,6 +38,8 @@ module.exports.login = (req, res, next) => {
         .catch((err) => {
             if (err.name === 'LoginError') {
                 next(new UnauthorizedError('Login error'));
+            } else if (err.name === 'PrivilegeError') {
+                next(new UnauthorizedError('Banned'));
             } else {
                 next(err);
             }
