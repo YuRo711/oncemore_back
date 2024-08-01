@@ -44,6 +44,11 @@ const userSchema = new Schema({
       default: 0,
       select: false,
     },
+    blocked: {
+      type: Boolean,
+      default: false,
+      select: false,
+    }
 });
 
 module.exports = mongoose.model('user', userSchema);

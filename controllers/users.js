@@ -91,3 +91,24 @@ module.exports.editCurrentUser = (req, res, next) => {
           }
   });
 }
+
+module.exports.blockUser = (req, res, next) => {
+  const { id } = req.params;
+
+  User.findByIdAndUpdate(_id, { blocked: true, })
+      .then((user) => {
+          const { name, email } = user;
+          res.status(OK_CODE).send({ data: { name, email} });
+      })
+      .catch((err) => {
+          if (err.name === 'NotFound') {
+              next(NotFoundError(NOT_FOUND_MESSAGE));
+          } else if (err.name === 'CastError') {
+              next(BadRequestError(ID_CAST_MESSAGE))
+          } else if (err.name === 'ValidationError') {
+              next(new BadRequestError(err.message));
+          } else {
+              next(err);
+          }
+  });
+}
