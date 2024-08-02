@@ -39,9 +39,9 @@ module.exports.getCurrentUser = (req, res, next) => {
     .then(user => res.status(OK_CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -60,9 +60,9 @@ module.exports.getUser = (req, res, next) => {
     .then(user => res.status(OK_CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -81,9 +81,9 @@ module.exports.editCurrentUser = (req, res, next) => {
       })
       .catch((err) => {
           if (err.name === 'NotFound') {
-              next(NotFoundError(NOT_FOUND_MESSAGE));
+              next(new NotFoundError(NOT_FOUND_MESSAGE));
           } else if (err.name === 'CastError') {
-              next(BadRequestError(ID_CAST_MESSAGE))
+              next(new BadRequestError(ID_CAST_MESSAGE))
           } else if (err.name === 'ValidationError') {
               next(new BadRequestError(err.message));
           } else {
@@ -102,9 +102,9 @@ module.exports.blockUser = (req, res, next) => {
       })
       .catch((err) => {
           if (err.name === 'NotFound') {
-              next(NotFoundError(NOT_FOUND_MESSAGE));
+              next(new NotFoundError(NOT_FOUND_MESSAGE));
           } else if (err.name === 'CastError') {
-              next(BadRequestError(ID_CAST_MESSAGE))
+              next(new BadRequestError(ID_CAST_MESSAGE))
           } else if (err.name === 'ValidationError') {
               next(new BadRequestError(err.message));
           } else {

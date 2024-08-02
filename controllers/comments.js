@@ -28,7 +28,7 @@ module.exports.deleteComment = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else if (err.name === 'ValidationError') {
           next(new BadRequestError(err.message));
       } else {
@@ -44,7 +44,7 @@ module.exports.getComments = (req, res, next) => {
     .then(comments => res.status(OK_CODE).send({ data: comments }))
     .catch((err) => {
       if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }

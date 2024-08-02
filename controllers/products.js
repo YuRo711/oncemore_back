@@ -21,7 +21,7 @@ module.exports.getProduct = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -63,7 +63,7 @@ module.exports.deleteProduct = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else if (err.name === 'ValidationError') {
           next(new BadRequestError(err.message));
       } else {
@@ -85,7 +85,7 @@ module.exports.editProduct = (req, res, next) => {
           if (err.name === 'NotFound') {
               next(NotFoundError(NOT_FOUND_MESSAGE));
           } else if (err.name === 'CastError') {
-              next(BadRequestError(ID_CAST_MESSAGE))
+              next(new BadRequestError(ID_CAST_MESSAGE))
           } else if (err.name === 'ValidationError') {
               next(new BadRequestError(err.message));
           } else {

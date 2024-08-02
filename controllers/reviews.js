@@ -39,7 +39,7 @@ module.exports.getReview = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -74,7 +74,7 @@ module.exports.deleteReview = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else if (err.name === 'ValidationError') {
           next(new BadRequestError(err.message));
       } else {
