@@ -82,6 +82,13 @@ const productSchema = new Schema({
   stock: {
     type: Number,
   },
+  likes: {
+    type: Array,
+    types: [{
+      name: { type: ObjectId },
+    }],
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('product', productSchema);

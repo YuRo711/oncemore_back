@@ -1,4 +1,8 @@
 const Product = require("../models/product");
+const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
+const BadRequestError = require('../utils/errors/bad-request-err');
+const NotFoundError = require('../utils/errors/not-found-err');
+
 
 module.exports.getProducts = (req, res, next) => {
   Product.find()
@@ -31,11 +35,12 @@ module.exports.getProduct = (req, res, next) => {
 
 module.exports.createProduct = (req, res, next) => {
   const { name, photo, category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode, stock
+    composition, appliance, country, article, size, barcode
   } = req.body;
   const productData = { 
     name, photo, category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode, stock
+    composition, appliance, country, article, size, barcode,
+    stock: 0,
   };
 
   Product.create(productData)
@@ -44,6 +49,7 @@ module.exports.createProduct = (req, res, next) => {
     )
     .catch((err) => {
       if (err.name === 'ValidationError') {
+          console.log(err);
           next(new BadRequestError(err.message));
       } else {
           next(err);

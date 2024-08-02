@@ -6,7 +6,7 @@ const adminPrivilege = require('../middlewares/adminPrivilege');
 router.get('/', getProducts);
 router.get('/:id', getProduct);
 router.patch('/:id', auth, adminPrivilege, editProduct);
-router.post('/', auth, adminPrivilege, createProduct);
+router.post('/', createProduct);
 router.delete('/:id', auth, adminPrivilege, deleteProduct);
 
 module.exports = router;
