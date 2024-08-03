@@ -11,13 +11,19 @@ const productSchema = new Schema({
     minlength: 2,
     maxlength: 128,
   },
-  photo: {
-    type: String,
-    validate: {
-      validator(value) {
-        return validator.isURL(value);
-      }
-    },
+  photos: {
+    type: Array,
+    types: [{
+      name: { 
+        type: String,
+        validate: {
+          validator(value) {
+            return validator.isURL(value);
+          }
+        }
+      },
+    }],
+    default: [],
   },
   category: {
     type: String,

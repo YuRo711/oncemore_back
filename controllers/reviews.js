@@ -1,9 +1,15 @@
 const Review = require("../models/review");
+const NotFoundError = require("../utils/errors/not-found-err");
+const BadRequestError = require("../utils/errors/bad-request-err");
+const { OK_CODE } = require("../utils/errors");
 
 module.exports.getReviews = (req, res, next) => {
   Review.find()
     .then(reviews => res.status(OK_CODE).send({ data: reviews }))
-    .catch((err) => next(err));
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
 }
 
 
@@ -37,7 +43,7 @@ module.exports.getReview = (req, res, next) => {
     .then(review => res.status(OK_CODE).send({ data: review }))
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
           next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
@@ -72,7 +78,7 @@ module.exports.deleteReview = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
           next(new BadRequestError(ID_CAST_MESSAGE))
       } else if (err.name === 'ValidationError') {
