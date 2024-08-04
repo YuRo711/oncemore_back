@@ -7,9 +7,12 @@ const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const NotFoundError = require('../utils/errors/not-found-err');
 const { validateUserLogin, validateUserData } = require('../middlewares/validator');
+const { uploadImage } = require('../controllers/fileUpload');
+const auth = require('../middlewares/auth');
 
 router.post('/signin', validateUserLogin, login);
 router.post('/signup', validateUserData, createUser);
+router.post('/upload', auth, uploadImage);
 
 router.use('/users/', userRouter);
 router.use('/reviews/', reviewRouter);

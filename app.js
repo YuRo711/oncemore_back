@@ -10,6 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require("./middlewares/errorHandler");
 const limiter = require('./middlewares/limiter');
 const { DB_HOST } = require('./utils/config');
+const fileUpload = require('express-fileupload');
 
 
 const app = express();
@@ -26,6 +27,15 @@ app.get('/crash-test', () => {
         throw new Error('Server will crash now');
     }, 0);
 });
+
+app.use(
+    fileUpload({
+        limits: {
+            fileSize: 100000,
+        },
+        abortOnLimit: true,
+    })
+);
 
 app.use(requestLogger);
 app.use(limiter);

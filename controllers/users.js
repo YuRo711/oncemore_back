@@ -9,6 +9,7 @@ const {
 const BadRequestError = require('../utils/errors/bad-request-err');
 const NotFoundError = require('../utils/errors/not-found-err');
 const ConflictError = require('../utils/errors/conflict-err');
+const { uploadImage } = require('./fileUpload');
 
 
 module.exports.createUser = (req, res, next) => {
@@ -72,25 +73,34 @@ module.exports.getUser = (req, res, next) => {
 }
 
 module.exports.editCurrentUser = (req, res, next) => {
-  const { _id } = req.user;
   changes.name ??= req.body.name;
-  changes.avatar ??= req.body.avatar;
+
+  changes.avatar = null;
+  uploadImage(req, res)
+      .then((data) => changes.avatar = data.url)
+      .then(() => editCurrentUserWithData(req, res, next, changes))
+      .catch(() => editCurrentUserWithData(req, res, next, changes));
+      
+}
+
+function editCurrentUserWithData(req, res, next, changes) {
+  const { _id } = req.user;
   
   User.findByIdAndUpdate(_id, changes, { new: true, runValidators: true })
-      .then((user) => {
-          const { name, avatar, email } = user;
-          res.status(OK_CODE).send({ data: { name, avatar, email} });
-      })
-      .catch((err) => {
-          if (err.name === 'NotFound') {
-              next(new NotFoundError(NOT_FOUND_MESSAGE));
-          } else if (err.name === 'CastError') {
-              next(new BadRequestError(ID_CAST_MESSAGE))
-          } else if (err.name === 'ValidationError') {
-              next(new BadRequestError(err.message));
-          } else {
-              next(err);
-          }
+    .then((user) => {
+        const { name, avatar, email } = user;
+        res.status(OK_CODE).send({ data: { name, avatar, email} });
+    })
+    .catch((err) => {
+        if (err.name === 'NotFound') {
+            next(new NotFoundError(NOT_FOUND_MESSAGE));
+        } else if (err.name === 'CastError') {
+            next(new BadRequestError(ID_CAST_MESSAGE))
+        } else if (err.name === 'ValidationError') {
+            next(new BadRequestError(err.message));
+        } else {
+            next(err);
+        }
   });
 }
 
