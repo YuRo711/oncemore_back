@@ -1,3 +1,4 @@
+const product = require("../models/product");
 const Product = require("../models/product");
 const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
 const BadRequestError = require('../utils/errors/bad-request-err');
@@ -58,10 +59,50 @@ module.exports.createProduct = (req, res, next) => {
 }
 
 
+module.exports.likeProduct = (req, res, next) => {
+  const { id } = req.params;
+  const { _id } = req.user;
+
+  Product.findById(id, { $push: { likes: _id } })
+    .then((product) => {
+      res.status(OK_CODE).send({ data: product });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(new BadRequestError(ID_CAST_MESSAGE))
+      } else {
+          next(err);
+      }
+  });
+}
+
+
+module.exports.unlikeProduct = (req, res, next) => {
+  const { id } = req.params;
+  const { _id } = req.user;
+
+  Product.findById(id, { $pull: { likes: _id } })
+    .then((product) => {
+      res.status(OK_CODE).send({ data: product });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(new BadRequestError(ID_CAST_MESSAGE))
+      } else {
+          next(err);
+      }
+  });
+}
+
+
 module.exports.deleteProduct = (req, res, next) => {
   const { id } = req.params;
   
-  Review.findByIdAndDelete(id)
+  Product.findByIdAndDelete(id)
     .then((product) => {
       res.status(OK_CODE).send({ data: product });
     })
@@ -83,7 +124,7 @@ module.exports.editProduct = (req, res, next) => {
   const { id } = req.props;
   const changes = req.body;
   
-  User.findByIdAndUpdate(id, changes)
+  Product.findByIdAndUpdate(id, changes)
       .then((product) => {
           res.status(OK_CODE).send({ data: product });
       })
