@@ -63,7 +63,7 @@ module.exports.likeProduct = (req, res, next) => {
   const { id } = req.params;
   const { _id } = req.user;
 
-  Product.findById(id, { $push: { likes: _id } })
+  Product.findByIdAndUpdate(id, { $push: { likes: _id } })
     .then((product) => {
       res.status(OK_CODE).send({ data: product });
     })
@@ -83,7 +83,7 @@ module.exports.unlikeProduct = (req, res, next) => {
   const { id } = req.params;
   const { _id } = req.user;
 
-  Product.findById(id, { $pull: { likes: _id } })
+  Product.findByIdAndUpdate(id, { $pull: { likes: _id } })
     .then((product) => {
       res.status(OK_CODE).send({ data: product });
     })
