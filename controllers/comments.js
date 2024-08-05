@@ -1,12 +1,14 @@
 const Comment = require("../models/comment");
+const BadRequestError = require("../utils/errors/bad-request-err");
+const NotFoundError = require("../utils/errors//not-found-err");
+const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
 
 module.exports.createComment = (req, res, next) => {
-  const { review } = req.params;
-  const { text } = req.body;
+  const { text, review, author } = req.body;
 
-  Comment.create({ author, product, video, text })
+  Comment.create({ author, review, text })
     .then(() => res.status(OK_CODE)
-      .send({ data: { author, product, video, text } })
+      .send({ data: { author, review, text } })
     )
     .catch((err) => {
       if (err.name === 'ValidationError') {

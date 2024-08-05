@@ -8,12 +8,10 @@ const commentSchema = new Schema({
   author: {
     type: ObjectId,
     required: true,
-    select: false,
   },
   review: {
     type: ObjectId,
     required: true,
-    select: false,
   },
   text: {
     type: String,

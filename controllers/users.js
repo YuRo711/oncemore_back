@@ -73,10 +73,12 @@ module.exports.getUser = (req, res, next) => {
 }
 
 module.exports.editCurrentUser = (req, res, next) => {
-  changes.name ??= req.body.name;
+  const changes = {};
+  //changes.name ??= req.body.name;
+  console.log(req.body.image);
 
   changes.avatar = null;
-  uploadImage(req, res)
+  uploadImage(req, res, next, req.body.image)
       .then((data) => changes.avatar = data.url)
       .then(() => editCurrentUserWithData(req, res, next, changes))
       .catch(() => editCurrentUserWithData(req, res, next, changes));
