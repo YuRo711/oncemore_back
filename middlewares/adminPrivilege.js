@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../utils/config');
 const UnauthorizedError = require('../utils/errors/unauthorized-err');
 const User = require('../models/user');
+const { OK_CODE } = require('../utils/errors');
 
 module.exports = (req, res, next) => {
     const user = req.user;
@@ -22,9 +23,7 @@ module.exports = (req, res, next) => {
         .then((user) => {
           if (user.privilege < 1)
             throw new Error();
-          return user;
         })
-        .then(user => res.status(OK_CODE).send({ data: user }))
         .catch((err) => {
           throw err;
       });

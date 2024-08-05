@@ -1,14 +1,14 @@
-const Comment = require("../models/comment");
+const Category = require("../models/category");
 const BadRequestError = require("../utils/errors/bad-request-err");
 const NotFoundError = require("../utils/errors//not-found-err");
 const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
 
-module.exports.createComment = (req, res, next) => {
-  const { text, review, author } = req.body;
+module.exports.createCategory = (req, res, next) => {
+  const { name, link } = req.body;
 
-  Comment.create({ author, review, text })
+  Category.create({ name, link })
     .then(() => res.status(OK_CODE)
-      .send({ data: { author, review, text } })
+      .send({ data: { name, link } })
     )
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -19,12 +19,12 @@ module.exports.createComment = (req, res, next) => {
     });
 }
 
-module.exports.deleteComment = (req, res, next) => {
-  const { id } = req.params;
+module.exports.deleteCategory = (req, res, next) => {
+  const { name } = req.body;
   
-  Comment.findByIdAndDelete(id)
-    .then((comment) => {
-      res.status(OK_CODE).send({ data: comment });
+  Category.findOneAndDelete({name: name})
+    .then((category) => {
+      res.status(OK_CODE).send({ data: category });
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -39,11 +39,9 @@ module.exports.deleteComment = (req, res, next) => {
   });
 }
 
-module.exports.getComments = (req, res, next) => {
-  const { reviewId } = req.params;
-
-  Comment.find({ review: reviewId })
-    .then(comments => res.status(OK_CODE).send({ data: comments }))
+module.exports.getCategories = (req, res, next) => {
+  Category.find()
+    .then(categories => res.status(OK_CODE).send({ data: categories }))
     .catch((err) => {
       if (err.name === 'CastError') {
           next(new BadRequestError(ID_CAST_MESSAGE))

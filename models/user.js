@@ -42,7 +42,6 @@ const userSchema = new Schema({
     privilege: {
       type: Number,
       default: 0,
-      select: false,
     },
 });
 

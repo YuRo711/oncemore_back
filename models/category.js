@@ -12,11 +12,6 @@ const categotySchema = new Schema({
   link: {
     type: String,
     required: true,
-    validate: {
-      validator(value) {
-        return validator.isURL(value);
-      }
-    },
   },
 });
 
