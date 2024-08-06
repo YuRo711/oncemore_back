@@ -29,6 +29,11 @@ router.post('/upload', upload.single("file"), (req, res) => {
         res.status(OK_CODE)
             .send({ data: req.file })
 });
+router.get('/uploads/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    res.sendFile(`./uploads/${id}`, { root: '.' });
+});
 
 router.use('*', (req, res, next) => {
     next(new NotFoundError("Requested resource not found"));

@@ -21,6 +21,7 @@ app.use(cors());
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 
+app.use(express.static('./uploads'));
 
 mongoose.connect(DB_HOST);
 
