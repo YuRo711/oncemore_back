@@ -38,6 +38,7 @@ const userSchema = new Schema({
           return validator.isURL(value);
         }
       },
+      default: "",
     },
     privilege: {
       type: Number,

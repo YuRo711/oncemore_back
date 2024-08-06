@@ -9,7 +9,6 @@ const {
 const BadRequestError = require('../utils/errors/bad-request-err');
 const NotFoundError = require('../utils/errors/not-found-err');
 const ConflictError = require('../utils/errors/conflict-err');
-const { uploadImage } = require('./fileUpload');
 
 
 module.exports.createUser = (req, res, next) => {
@@ -75,23 +74,13 @@ module.exports.getUser = (req, res, next) => {
 module.exports.editCurrentUser = (req, res, next) => {
   const changes = {};
   //changes.name ??= req.body.name;
-  console.log(req.body.image);
-
-  changes.avatar = null;
-  uploadImage(req, res, next, req.body.image)
-      .then((data) => changes.avatar = data.url)
-      .then(() => editCurrentUserWithData(req, res, next, changes))
-      .catch(() => editCurrentUserWithData(req, res, next, changes));
-      
-}
-
-function editCurrentUserWithData(req, res, next, changes) {
+  changes.avatar = req.body.avatar;
+  console.log(changes.avatar);
   const { _id } = req.user;
-  
-  User.findByIdAndUpdate(_id, changes, { new: true, runValidators: true })
+
+  User.findByIdAndUpdate(_id, changes)
     .then((user) => {
-        const { name, avatar, email } = user;
-        res.status(OK_CODE).send({ data: { name, avatar, email} });
+        res.status(OK_CODE).send({ data: user });
     })
     .catch((err) => {
         if (err.name === 'NotFound') {
@@ -104,8 +93,8 @@ function editCurrentUserWithData(req, res, next, changes) {
             next(err);
         }
   });
+      
 }
-
 module.exports.blockUser = (req, res, next) => {
   const { id } = req.params;
 
