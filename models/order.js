@@ -32,7 +32,15 @@ const orderSchema = new Schema({
   status: {
     type: String,
     default: "В обработке",
-  }
+  },
+  name: {
+    type: String,
+    maxlength: 64,
+  },
+  address: {
+    type: String,
+    maxlength: 192,
+  },
 });
 
 module.exports = mongoose.model('order', orderSchema);

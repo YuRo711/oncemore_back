@@ -1,8 +1,10 @@
 const Order = require("../models/order");
+const { OK_CODE } = require("../utils/errors");
 
 module.exports.createOrder = (req, res, next) => {
   const date = Date.now();
-  const { items } = req.body;
+  const user = req.user._id;
+  const { items, quantity, address, name } = req.body;
 
   Order.create({ user, date, items, quantity })
     .then(() => res.status(OK_CODE)

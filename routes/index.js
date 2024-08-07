@@ -5,6 +5,7 @@ const commentRouter = require('./comments');
 const productRouter = require('./products');
 const cateoryRouter = require('./categories');
 const bannerRouter = require('./banners');
+const orderRouter = require('./orders');
 
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
@@ -24,6 +25,7 @@ router.use('/comments/', commentRouter);
 router.use('/products/', productRouter);
 router.use('/categories/', cateoryRouter);
 router.use('/banners/', bannerRouter);
+router.use('/orders/', orderRouter);
 
 const upload = multer({ dest: "uploads/"});
 router.post('/upload', upload.single("file"), (req, res) => {
