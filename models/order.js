@@ -21,6 +21,18 @@ const orderSchema = new Schema({
       name: { type: ObjectId },
     }]
   },
+  quantity: {
+    type: Array,
+    maxlength: 64,
+    required: true,
+    types: [{
+      name: { type: Number },
+    }]
+  },
+  status: {
+    type: String,
+    default: "В обработке",
+  }
 });
 
 module.exports = mongoose.model('order', orderSchema);
