@@ -31,6 +31,17 @@ module.exports.getProductReviews = (req, res, next) => {
 }
 
 
+module.exports.addViewToVideo = (req, res, next) => {
+  const { id } = req.params;
+  const views = req.body.views;
+  changes = { views: views + 1 };
+
+  Review.findByIdAndUpdate(id, changes)
+    .then(reviews => res.status(OK_CODE).send({ data: reviews }))
+    .catch((err) => next(err));
+}
+
+
 module.exports.getReview = (req, res, next) => {
   const { id } = req.params;
 
