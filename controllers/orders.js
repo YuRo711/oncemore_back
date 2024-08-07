@@ -36,3 +36,13 @@ module.exports.updateOrderStatus = (req, res, next) => {
       }
     });
 }
+
+module.exports.getOrders = (req, res, next) => {
+  Order.find()
+    .then((orders) => res.status(OK_CODE)
+      .send({ data: orders })
+    )
+    .catch((err) => {
+      next(err);
+    });
+}
