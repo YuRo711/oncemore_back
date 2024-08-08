@@ -7,7 +7,7 @@ const { ObjectId } = Schema;
 const productTypeSchema = new Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   colors: {
     type: Array,

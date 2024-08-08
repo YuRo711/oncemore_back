@@ -95,6 +95,10 @@ const productSchema = new Schema({
     }],
     default: [],
   },
+  type: {
+    type: ObjectId,
+    required: true,
+  }
 });
 
 module.exports = mongoose.model('product', productSchema);

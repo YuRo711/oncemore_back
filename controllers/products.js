@@ -36,11 +36,11 @@ module.exports.getProduct = (req, res, next) => {
 
 module.exports.createProduct = (req, res, next) => {
   const { name, photo, category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode
+    composition, appliance, country, article, size, barcode, type,
   } = req.body;
   const productData = { 
     name, photos: [photo], category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode,
+    composition, appliance, country, article, size, barcode, type,
     stock: 0,
   };
 
