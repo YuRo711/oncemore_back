@@ -41,7 +41,7 @@ module.exports.createProduct = (req, res, next) => {
   } = req.body;
   const productData = { 
     name, photos: [photo], category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode,
+    composition, appliance, country, article, size, barcode, type,
     stock: 0,
   };
 
@@ -50,11 +50,8 @@ module.exports.createProduct = (req, res, next) => {
       const typeData = {
         colorImage, color, name: type, productId: data._id
       };
-      return productType.addProductToType(typeData, next);
+      productType.addProductToType(typeData, next);
     })
-    .then((result) => 
-      return Product.findOneAndUpdate({name: name}, {type: result.name})
-    )
     .then(() => res.status(OK_CODE)
       .send({ data: productData })
     )

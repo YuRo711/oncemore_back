@@ -5,11 +5,11 @@ const NotFoundError = require('../utils/errors/not-found-err');
 
 module.exports.createProductType = (data, next) => {
   const { name, color, colorImage, productId } = data;
-  const data = {
+  const newData = {
     name, colors: [color], colorImages: [colorImage], products: [productId]
   }
 
-  return ProductType.create(data)
+  return ProductType.create(newData)
     .then((result) => result)
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -32,7 +32,6 @@ module.exports.addProductToType = (data, next) => {
     .orFail(() => {
       return this.createProductType(data, next);
     })
-    .then((result) => result)
     .catch((err) => {
       if (err.name === 'ValidationError') {
           console.log(err);
@@ -41,4 +40,22 @@ module.exports.addProductToType = (data, next) => {
           next(err);
       }
     });
+}
+
+module.exports.getProductType = (req, res, next) => {
+  const { type } = req.body;
+
+  return ProductType.find({name: type})
+    .then((result) => res.status(OK_CODE)
+      .send({ data: result })
+    )
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+          console.log(err);
+          next(new BadRequestError(err.message));
+      } else {
+          next(err);
+      }
+    });
+
 }
