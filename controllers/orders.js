@@ -22,7 +22,7 @@ module.exports.createOrder = (req, res, next) => {
 module.exports.updateOrderStatus = (req, res, next) => {
   const status = req.body.status;
   const changes = { status };
-  const { id } = req.props;
+  const { id } = req.params;
 
   Order.findByIdAndUpdate(id, changes)
     .then(() => res.status(OK_CODE)
@@ -39,6 +39,18 @@ module.exports.updateOrderStatus = (req, res, next) => {
 
 module.exports.getOrders = (req, res, next) => {
   Order.find()
+    .then((orders) => res.status(OK_CODE)
+      .send({ data: orders })
+    )
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports.getMyOrders = (req, res, next) => {
+  const { _id } = req.user;
+
+  Order.find({user: _id})
     .then((orders) => res.status(OK_CODE)
       .send({ data: orders })
     )
