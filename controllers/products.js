@@ -1,5 +1,4 @@
 const Product = require("../models/product");
-const ProductType = require("../models/product");
 const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
 const BadRequestError = require('../utils/errors/bad-request-err');
 const NotFoundError = require('../utils/errors/not-found-err');
