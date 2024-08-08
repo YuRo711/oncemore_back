@@ -97,7 +97,6 @@ const productSchema = new Schema({
   },
   type: {
     type: ObjectId,
-    required: true,
   }
 });
 

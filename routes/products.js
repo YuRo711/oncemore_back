@@ -8,7 +8,6 @@ router.get('/', getProducts);
 router.get('/:id', getProduct);
 router.patch('/:id', auth, adminPrivilege, editProduct);
 router.post('/', createProduct);
-router.post('/types', auth, adminPrivilege, addProductToType);
 router.delete('/:id', auth, adminPrivilege, deleteProduct);
 
 router.patch('/:id/like', auth, likeProduct);

@@ -2,6 +2,7 @@ const Product = require("../models/product");
 const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
 const BadRequestError = require('../utils/errors/bad-request-err');
 const NotFoundError = require('../utils/errors/not-found-err');
+const productType = require("./productType.js")
 
 
 module.exports.getProducts = (req, res, next) => {
@@ -35,15 +36,25 @@ module.exports.getProduct = (req, res, next) => {
 
 module.exports.createProduct = (req, res, next) => {
   const { name, photo, category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode, type,
+    composition, appliance, country, article, size, barcode, 
+    colorImage, type,
   } = req.body;
   const productData = { 
     name, photos: [photo], category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode, type,
+    composition, appliance, country, article, size, barcode,
     stock: 0,
   };
 
   Product.create(productData)
+    .then((data) => {
+      const typeData = {
+        colorImage, color, name: type, productId: data._id
+      };
+      return productType.addProductToType(typeData, next);
+    })
+    .then((result) => 
+      return Product.findOneAndUpdate({name: name}, {type: result.name})
+    )
     .then(() => res.status(OK_CODE)
       .send({ data: productData })
     )

@@ -3,16 +3,14 @@ const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors
 const BadRequestError = require('../utils/errors/bad-request-err');
 const NotFoundError = require('../utils/errors/not-found-err');
 
-module.exports.createProductType = (req, res, next) => {
-  const { name, color, colorImage, productId } = req.body;
+module.exports.createProductType = (data, next) => {
+  const { name, color, colorImage, productId } = data;
   const data = {
     name, colors: [color], colorImages: [colorImage], products: [productId]
   }
 
-  ProductType.create(data)
-    .then((result) => res.status(OK_CODE)
-      .send({ data: result })
-    )
+  return ProductType.create(data)
+    .then((result) => result)
     .catch((err) => {
       if (err.name === 'ValidationError') {
           console.log(err);
@@ -23,21 +21,18 @@ module.exports.createProductType = (req, res, next) => {
     });
 }
 
-module.exports.addProductToType = (req, res, next) => {
-  const { name, color, colorImage, productId } = req.body;
+module.exports.addProductToType = (data, next) => {
+  const { name, color, colorImage, productId } = data;
 
-  ProductType.findOneAndUpdate({name: name}, {$push: {
+  return ProductType.findOneAndUpdate({name: name}, {$push: {
     colors: color,
     colorImages: colorImage,
     products: productId,
   }})
     .orFail(() => {
-      this.createProductType(req, res, next);
-      return;
+      return this.createProductType(data, next);
     })
-    .then((result) => res.status(OK_CODE)
-      .send({ data: result })
-    )
+    .then((result) => result)
     .catch((err) => {
       if (err.name === 'ValidationError') {
           console.log(err);
