@@ -28,7 +28,7 @@ router.use('/banners/', bannerRouter);
 router.use('/orders/', orderRouter);
 
 const upload = multer({ dest: "uploads/"});
-router.post('/upload', upload.single("file"), (req, res) => {
+router.post('/upload', upload.single("file"), auth, (req, res) => {
     if (req.file)
         res.status(OK_CODE)
             .send({ data: req.file })
