@@ -4,7 +4,7 @@ const validator = require('validator');
 const { Schema } = mongoose;
 const { ObjectId } = Schema;
 
-const categotySchema = new Schema({
+const categorySchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -15,4 +15,4 @@ const categotySchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('category', categotySchema);
+module.exports = mongoose.model('category', categorySchema);
