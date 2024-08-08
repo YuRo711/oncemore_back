@@ -98,6 +98,10 @@ const productSchema = new Schema({
   type: {
     type: String,
     required: true,
+  },
+  colorImage: {
+    type: String,
+    default: "#000000",
   }
 });
 
