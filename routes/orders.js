@@ -6,7 +6,7 @@ const router = require('express').Router();
 
 router.get('/', auth, adminPrivilege, getOrders);
 router.get('/my', auth, getMyOrders);
-router.post('/', auth, createOrder);
+router.post('/', createOrder);
 router.patch('/:id', auth, adminPrivilege, updateOrderStatus);
 
 module.exports = router;

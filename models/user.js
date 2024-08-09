@@ -20,6 +20,16 @@ const userSchema = new Schema({
       },
       unique: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      validate: {
+        validator(value) {
+          return validator.isMobilePhone(value);
+        }
+      },
+      unique: true,
+    },
     password: {
       type: String,
       required: true,

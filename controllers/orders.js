@@ -3,12 +3,12 @@ const { OK_CODE } = require("../utils/errors");
 
 module.exports.createOrder = (req, res, next) => {
   const date = Date.now();
-  const user = req.user._id;
+  const user = req.user ? req.user._id : undefined;
   const { items, quantity, address, name } = req.body;
 
-  Order.create({ user, date, items, quantity })
+  Order.create({ user, date, items, quantity, address, name })
     .then(() => res.status(OK_CODE)
-      .send({ data: { user, date, items, quantity } })
+      .send({ data: { user, date, items, quantity, address, name } })
     )
     .catch((err) => {
       if (err.name === 'ValidationError') {
