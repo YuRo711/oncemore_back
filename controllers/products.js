@@ -140,3 +140,24 @@ module.exports.editProduct = (req, res, next) => {
           }
   });
 }
+
+module.exports.addPhotoToProduct = (req, res, next) => {
+  const { id } = req.props;
+  const photo = req.body.photo;
+  
+  Product.findByIdAndUpdate(id, {$push: {photos: photo}})
+      .then((product) => {
+          res.status(OK_CODE).send({ data: product });
+      })
+      .catch((err) => {
+          if (err.name === 'NotFound') {
+              next(NotFoundError(NOT_FOUND_MESSAGE));
+          } else if (err.name === 'CastError') {
+              next(new BadRequestError(ID_CAST_MESSAGE))
+          } else if (err.name === 'ValidationError') {
+              next(new BadRequestError(err.message));
+          } else {
+              next(err);
+          }
+  });
+}
