@@ -92,9 +92,31 @@ module.exports.editCurrentUser = (req, res, next) => {
         } else {
             next(err);
         }
-  });
-      
+  }); 
 }
+
+module.exports.changeUserPoints = (req, res, next) => {
+  const changes = {};
+  changes.points = req.body.points;
+  const id = req.body.id;
+
+  User.findByIdAndUpdate(_id, changes)
+    .then((user) => {
+        res.status(OK_CODE).send({ data: user });
+    })
+    .catch((err) => {
+        if (err.name === 'NotFound') {
+            next(new NotFoundError(NOT_FOUND_MESSAGE));
+        } else if (err.name === 'CastError') {
+            next(new BadRequestError(ID_CAST_MESSAGE))
+        } else if (err.name === 'ValidationError') {
+            next(new BadRequestError(err.message));
+        } else {
+            next(err);
+        }
+  }); 
+}
+
 module.exports.blockUser = (req, res, next) => {
   const { id } = req.params;
 
