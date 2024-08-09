@@ -102,7 +102,15 @@ const productSchema = new Schema({
   colorImage: {
     type: String,
     default: "#000000",
-  }
+  },
+  isNew: {
+    type: Boolean,
+    default: true,
+  },
+  discount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model('product', productSchema);
