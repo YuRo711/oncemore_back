@@ -7,7 +7,6 @@ const { ObjectId } = Schema;
 const orderSchema = new Schema({
   user: {
     type: ObjectId,
-    required: true,
   },
   date: {
     type: Date,

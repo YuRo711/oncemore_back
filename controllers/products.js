@@ -121,7 +121,7 @@ module.exports.deleteProduct = (req, res, next) => {
 
 
 module.exports.editProduct = (req, res, next) => {
-  const { id } = req.props;
+  const { id } = req.params;
   const changes = req.body;
   
   Product.findByIdAndUpdate(id, changes)
@@ -142,7 +142,7 @@ module.exports.editProduct = (req, res, next) => {
 }
 
 module.exports.addPhotoToProduct = (req, res, next) => {
-  const { id } = req.props;
+  const { id } = req.params;
   const photo = req.body.photo;
   
   Product.findByIdAndUpdate(id, {$push: {photos: photo}})
