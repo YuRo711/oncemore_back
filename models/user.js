@@ -20,6 +20,16 @@ const userSchema = new Schema({
       },
       unique: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      validate: {
+        validator(value) {
+          return validator.isMobilePhone(value);
+        }
+      },
+      unique: true,
+    },
     password: {
       type: String,
       required: true,
@@ -38,11 +48,15 @@ const userSchema = new Schema({
           return validator.isURL(value);
         }
       },
+      default: "",
     },
     privilege: {
       type: Number,
       default: 0,
-      select: false,
+    },
+    points: {
+      type: Number,
+      default: 100,
     },
 });
 

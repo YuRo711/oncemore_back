@@ -10,14 +10,18 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require("./middlewares/errorHandler");
 const limiter = require('./middlewares/limiter');
 const { DB_HOST } = require('./utils/config');
+const multer = require('multer');
 
 
 const app = express();
 const { PORT = 3001 } = process.env;
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
+
+app.use(express.static('./uploads'));
 
 mongoose.connect(DB_HOST);
 

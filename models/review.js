@@ -8,12 +8,10 @@ const reviewSchema = new Schema({
   author: {
     type: ObjectId,
     required: true,
-    select: false,
   },
   product: {
     type: ObjectId,
     required: true,
-    select: false,
   },
   video: {
     type: String,
@@ -27,6 +25,10 @@ const reviewSchema = new Schema({
   text: {
     type: String,
     maxlength: 512,
+  },
+  views: {
+    type: Number,
+    default: 0,
   },
 });
 

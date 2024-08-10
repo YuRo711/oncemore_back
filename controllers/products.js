@@ -1,4 +1,8 @@
 const Product = require("../models/product");
+const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
+const BadRequestError = require('../utils/errors/bad-request-err');
+const NotFoundError = require('../utils/errors/not-found-err');
+
 
 module.exports.getProducts = (req, res, next) => {
   Product.find()
@@ -21,7 +25,7 @@ module.exports.getProduct = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -31,11 +35,13 @@ module.exports.getProduct = (req, res, next) => {
 
 module.exports.createProduct = (req, res, next) => {
   const { name, photo, category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode, stock
+    composition, appliance, country, article, size, barcode, 
+    colorImage, type,
   } = req.body;
   const productData = { 
-    name, photo, category, brand, color, price, description,
-    composition, appliance, country, article, size, barcode, stock
+    name, photos: [photo], category, brand, color, price, description,
+    composition, appliance, country, article, size, barcode, type, colorImage,
+    stock: 0,
   };
 
   Product.create(productData)
@@ -44,6 +50,7 @@ module.exports.createProduct = (req, res, next) => {
     )
     .catch((err) => {
       if (err.name === 'ValidationError') {
+          console.log(err);
           next(new BadRequestError(err.message));
       } else {
           next(err);
@@ -52,10 +59,11 @@ module.exports.createProduct = (req, res, next) => {
 }
 
 
-module.exports.deleteProduct = (req, res, next) => {
+module.exports.likeProduct = (req, res, next) => {
   const { id } = req.params;
-  
-  Review.findByIdAndDelete(id)
+  const { _id } = req.user;
+
+  Product.findByIdAndUpdate(id, { $push: { likes: _id } })
     .then((product) => {
       res.status(OK_CODE).send({ data: product });
     })
@@ -63,7 +71,46 @@ module.exports.deleteProduct = (req, res, next) => {
       if (err.name === 'NotFound') {
           next(NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
+      } else {
+          next(err);
+      }
+  });
+}
+
+
+module.exports.unlikeProduct = (req, res, next) => {
+  const { id } = req.params;
+  const { _id } = req.user;
+
+  Product.findByIdAndUpdate(id, { $pull: { likes: _id } })
+    .then((product) => {
+      res.status(OK_CODE).send({ data: product });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(new BadRequestError(ID_CAST_MESSAGE))
+      } else {
+          next(err);
+      }
+  });
+}
+
+
+module.exports.deleteProduct = (req, res, next) => {
+  const { id } = req.params;
+  
+  Product.findByIdAndDelete(id)
+    .then((product) => {
+      res.status(OK_CODE).send({ data: product });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFound') {
+          next(NotFoundError(NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else if (err.name === 'ValidationError') {
           next(new BadRequestError(err.message));
       } else {
@@ -74,10 +121,10 @@ module.exports.deleteProduct = (req, res, next) => {
 
 
 module.exports.editProduct = (req, res, next) => {
-  const { id } = req.props;
+  const { id } = req.params;
   const changes = req.body;
   
-  User.findByIdAndUpdate(id, changes)
+  Product.findByIdAndUpdate(id, changes)
       .then((product) => {
           res.status(OK_CODE).send({ data: product });
       })
@@ -85,7 +132,28 @@ module.exports.editProduct = (req, res, next) => {
           if (err.name === 'NotFound') {
               next(NotFoundError(NOT_FOUND_MESSAGE));
           } else if (err.name === 'CastError') {
-              next(BadRequestError(ID_CAST_MESSAGE))
+              next(new BadRequestError(ID_CAST_MESSAGE))
+          } else if (err.name === 'ValidationError') {
+              next(new BadRequestError(err.message));
+          } else {
+              next(err);
+          }
+  });
+}
+
+module.exports.addPhotoToProduct = (req, res, next) => {
+  const { id } = req.params;
+  const photo = req.body.photo;
+  
+  Product.findByIdAndUpdate(id, {$push: {photos: photo}})
+      .then((product) => {
+          res.status(OK_CODE).send({ data: product });
+      })
+      .catch((err) => {
+          if (err.name === 'NotFound') {
+              next(NotFoundError(NOT_FOUND_MESSAGE));
+          } else if (err.name === 'CastError') {
+              next(new BadRequestError(ID_CAST_MESSAGE))
           } else if (err.name === 'ValidationError') {
               next(new BadRequestError(err.message));
           } else {

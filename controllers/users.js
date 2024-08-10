@@ -12,17 +12,19 @@ const ConflictError = require('../utils/errors/conflict-err');
 
 
 module.exports.createUser = (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, handle } = req.body;
+  console.log(email);
   bcrypt.hash(password, 5)
-    .then((hash) => User.create({ name, email, password: hash }))
+    .then((hash) => User.create({ name, email, password: hash, handle }))
     .then(() => res.status(OK_CODE).send({ data: { name, email } }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-          next(new BadRequestError(err.message));
+        console.log(err.message);
+        next(new BadRequestError(err.message));
       } else if (err.code === 11000) {
-          next(new ConflictError(CONFLICT_MESSAGE));
+        next(new ConflictError(CONFLICT_MESSAGE));
       } else {
-          next(err);
+        next(err);
       }
     });
 };
@@ -39,9 +41,9 @@ module.exports.getCurrentUser = (req, res, next) => {
     .then(user => res.status(OK_CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -60,9 +62,9 @@ module.exports.getUser = (req, res, next) => {
     .then(user => res.status(OK_CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }
@@ -70,26 +72,49 @@ module.exports.getUser = (req, res, next) => {
 }
 
 module.exports.editCurrentUser = (req, res, next) => {
+  const changes = {};
+  //changes.name ??= req.body.name;
+  changes.avatar = req.body.avatar;
+  console.log(changes.avatar);
   const { _id } = req.user;
-  changes.name ??= req.body.name;
-  changes.avatar ??= req.body.avatar;
-  
-  User.findByIdAndUpdate(_id, changes, { new: true, runValidators: true })
-      .then((user) => {
-          const { name, avatar, email } = user;
-          res.status(OK_CODE).send({ data: { name, avatar, email} });
-      })
-      .catch((err) => {
-          if (err.name === 'NotFound') {
-              next(NotFoundError(NOT_FOUND_MESSAGE));
-          } else if (err.name === 'CastError') {
-              next(BadRequestError(ID_CAST_MESSAGE))
-          } else if (err.name === 'ValidationError') {
-              next(new BadRequestError(err.message));
-          } else {
-              next(err);
-          }
-  });
+
+  User.findByIdAndUpdate(_id, changes)
+    .then((user) => {
+        res.status(OK_CODE).send({ data: user });
+    })
+    .catch((err) => {
+        if (err.name === 'NotFound') {
+            next(new NotFoundError(NOT_FOUND_MESSAGE));
+        } else if (err.name === 'CastError') {
+            next(new BadRequestError(ID_CAST_MESSAGE))
+        } else if (err.name === 'ValidationError') {
+            next(new BadRequestError(err.message));
+        } else {
+            next(err);
+        }
+  }); 
+}
+
+module.exports.changeUserPoints = (req, res, next) => {
+  const changes = {};
+  changes.points = req.body.points;
+  const id = req.body.id;
+
+  User.findByIdAndUpdate(_id, changes)
+    .then((user) => {
+        res.status(OK_CODE).send({ data: user });
+    })
+    .catch((err) => {
+        if (err.name === 'NotFound') {
+            next(new NotFoundError(NOT_FOUND_MESSAGE));
+        } else if (err.name === 'CastError') {
+            next(new BadRequestError(ID_CAST_MESSAGE))
+        } else if (err.name === 'ValidationError') {
+            next(new BadRequestError(err.message));
+        } else {
+            next(err);
+        }
+  }); 
 }
 
 module.exports.blockUser = (req, res, next) => {
@@ -102,9 +127,9 @@ module.exports.blockUser = (req, res, next) => {
       })
       .catch((err) => {
           if (err.name === 'NotFound') {
-              next(NotFoundError(NOT_FOUND_MESSAGE));
+              next(new NotFoundError(NOT_FOUND_MESSAGE));
           } else if (err.name === 'CastError') {
-              next(BadRequestError(ID_CAST_MESSAGE))
+              next(new BadRequestError(ID_CAST_MESSAGE))
           } else if (err.name === 'ValidationError') {
               next(new BadRequestError(err.message));
           } else {

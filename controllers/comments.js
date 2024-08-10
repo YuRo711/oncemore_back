@@ -1,12 +1,14 @@
 const Comment = require("../models/comment");
+const BadRequestError = require("../utils/errors/bad-request-err");
+const NotFoundError = require("../utils/errors//not-found-err");
+const { OK_CODE, NOT_FOUND_MESSAGE, ID_CAST_MESSAGE } = require("../utils/errors");
 
 module.exports.createComment = (req, res, next) => {
-  const { review } = req.params;
-  const { text } = req.body;
+  const { text, review, author } = req.body;
 
-  Comment.create({ author, product, video, text })
+  Comment.create({ author, review, text })
     .then(() => res.status(OK_CODE)
-      .send({ data: { author, product, video, text } })
+      .send({ data: { author, review, text } })
     )
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -26,9 +28,9 @@ module.exports.deleteComment = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
-          next(NotFoundError(NOT_FOUND_MESSAGE));
+          next(new NotFoundError(NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else if (err.name === 'ValidationError') {
           next(new BadRequestError(err.message));
       } else {
@@ -44,7 +46,7 @@ module.exports.getComments = (req, res, next) => {
     .then(comments => res.status(OK_CODE).send({ data: comments }))
     .catch((err) => {
       if (err.name === 'CastError') {
-          next(BadRequestError(ID_CAST_MESSAGE))
+          next(new BadRequestError(ID_CAST_MESSAGE))
       } else {
           next(err);
       }

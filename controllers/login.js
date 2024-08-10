@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../utils/config');
 const UnauthorizedError = require('../utils/errors/unauthorized-err');
+const ForbiddenError = require('../utils/errors/forbidden-err');
 
 
 module.exports.login = (req, res, next) => {
@@ -39,7 +40,7 @@ module.exports.login = (req, res, next) => {
             if (err.name === 'LoginError') {
                 next(new UnauthorizedError('Login error'));
             } else if (err.name === 'PrivilegeError') {
-                next(new UnauthorizedError('Banned'));
+                next(new ForbiddenError('Banned'));
             } else {
                 next(err);
             }

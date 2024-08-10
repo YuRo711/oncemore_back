@@ -11,13 +11,19 @@ const productSchema = new Schema({
     minlength: 2,
     maxlength: 128,
   },
-  photo: {
-    type: String,
-    validate: {
-      validator(value) {
-        return validator.isURL(value);
-      }
-    },
+  photos: {
+    type: Array,
+    types: [{
+      name: { 
+        type: String,
+        validate: {
+          validator(value) {
+            return validator.isURL(value);
+          }
+        }
+      },
+    }],
+    default: [],
   },
   category: {
     type: String,
@@ -81,6 +87,29 @@ const productSchema = new Schema({
   },
   stock: {
     type: Number,
+  },
+  likes: {
+    type: Array,
+    types: [{
+      name: { type: ObjectId },
+    }],
+    default: [],
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  colorImage: {
+    type: String,
+    default: "#000000",
+  },
+  isNew: {
+    type: Boolean,
+    default: true,
+  },
+  discount: {
+    type: Number,
+    default: 0,
   },
 });
 
