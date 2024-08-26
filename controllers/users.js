@@ -12,10 +12,10 @@ const ConflictError = require('../utils/errors/conflict-err');
 
 
 module.exports.createUser = (req, res, next) => {
-  const { name, email, password, handle } = req.body;
+  const { name, email, password, handle, phone } = req.body;
   console.log(email);
   bcrypt.hash(password, 5)
-    .then((hash) => User.create({ name, email, password: hash, handle }))
+    .then((hash) => User.create({ name, email, phone, password: hash, handle }))
     .then(() => res.status(OK_CODE).send({ data: { name, email } }))
     .catch((err) => {
       if (err.name === 'ValidationError') {

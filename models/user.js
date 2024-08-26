@@ -23,11 +23,6 @@ const userSchema = new Schema({
     phone: {
       type: String,
       required: true,
-      validate: {
-        validator(value) {
-          return validator.isMobilePhone(value);
-        }
-      },
       unique: true,
     },
     password: {
@@ -45,7 +40,7 @@ const userSchema = new Schema({
       type: String,
       validate: {
         validator(value) {
-          return validator.isURL(value);
+          return validator.isURL(value) || value.length == 0;
         }
       },
       default: "",

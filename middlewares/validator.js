@@ -16,6 +16,13 @@ const validateEmail = (value, helpers) => {
   return helpers.error('string.notemail');
 }
 
+const validatePhone = (value, helpers) => {
+  if (value.startsWith("+7") && value.length == 12) {
+    return value;
+  }
+  return helpers.error('string.notphone');
+}
+
 
 module.exports.validateUserData = celebrate({
   body: Joi.object().keys({
@@ -41,6 +48,11 @@ module.exports.validateUserData = celebrate({
 
     avatar: Joi.string().custom(validateURL).messages({
       "string.uri": 'the "avatar" field must be a valid url',
+    }),
+
+    phone: Joi.string().custom(validatePhone).messages({
+      "string.empty": 'The "phone" field must be filled in',
+      "string.notphone": 'the "avatar" field must be a valid phone number',
     }),
   }),
 });
